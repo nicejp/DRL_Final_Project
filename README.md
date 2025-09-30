@@ -20,10 +20,13 @@
 
 ```
 .
-├── symbols.txt          # 取引対象銘柄リスト（東証銘柄コード）
-├── 1_get_data.py        # 株価データ取得スクリプト
-├── 2_calc_tech.py       # テクニカル指標計算スクリプト
-└── 3_dqn_train.py       # DQNモデル学習スクリプト
+├── symbols.txt                # 取引対象銘柄リスト（東証銘柄コード）
+├── 1_get_data.py              # 株価データ取得スクリプト
+├── 2_calc_tech.py             # テクニカル指標計算スクリプト
+├── 3_dqn_train.py             # DQNモデル学習スクリプト
+├── yfinance_data/             # 取得した株価データ（CSV形式）
+├── technical_indicators/      # 計算されたテクニカル指標（CSV形式）
+└── result/                    # 学習結果
 ```
 
 ## 使用方法
@@ -34,12 +37,14 @@
 python 1_get_data.py
 ```
 
-`symbols.txt`に記載された銘柄の株価データを取得します。
+`symbols.txt`に記載された銘柄の株価データを取得し、`yfinance_data/`フォルダにCSV形式で保存します。
 
 **設定可能なパラメータ（1_get_data.py内）:**
 - `DEFAULT_PERIOD`: データ取得期間（例: "1y", "2y", "3y", "5y"）
 - `DEFAULT_DAYS_BACK`: 過去何日分のデータを取得するか
 - `FORCE_UPDATE_DEFAULT`: 既存データを強制更新するかどうか
+
+**出力:** `yfinance_data/` フォルダに各銘柄のCSVファイルが作成されます
 
 ### 2. テクニカル指標の計算
 
@@ -47,7 +52,9 @@ python 1_get_data.py
 python 2_calc_tech.py
 ```
 
-取得した株価データに対してテクニカル指標を計算し、学習用データを作成します。
+取得した株価データに対してテクニカル指標を計算し、`technical_indicators/`フォルダにCSV形式で保存します。
+
+**出力:** `technical_indicators/` フォルダに各銘柄のテクニカル指標データが作成されます
 
 ### 3. DQNモデルの学習
 
@@ -55,12 +62,16 @@ python 2_calc_tech.py
 python 3_dqn_train.py
 ```
 
-強化学習によりトレーディング戦略を学習します。
+強化学習によりトレーディング戦略を学習し、`result/`フォルダに学習結果を保存します。
 
 **設定可能なパラメータ（3_dqn_train.py内）:**
 - `RANDOM_SEED`: 再現性のためのシード値
 - `USE_DAYS_BACK`: 学習に使用する過去日数
 - `USE_DATE_FROM`, `USE_DATE_TO`: 学習期間の指定
+
+**出力:** `result/` フォルダに以下のファイルが作成されます
+- `{symbol}_trading_report.txt`: 各銘柄の取引レポート
+- `overall_summary.txt`: 全体サマリーと翌取引日の推奨アクション
 
 ## 必要なライブラリ
 
